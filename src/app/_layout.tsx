@@ -1,6 +1,13 @@
 import "../global.css";
-import { Slot } from "expo-router";
+import { Stack } from "expo-router";
+import AppContextProvider from "@/context/AppContext";
 
 export default function Layout() {
-  return <Slot />;
+	return (
+		<AppContextProvider>
+			<Stack>
+				<Stack.Screen name="dashboard" />
+			</Stack>
+		</AppContextProvider>
+	);
 }
