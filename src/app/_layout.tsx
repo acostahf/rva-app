@@ -6,7 +6,7 @@ export default function Layout() {
 	return (
 		<AppContextProvider>
 			<Stack>
-				<Stack.Screen name="dashboard" />
+				<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 			</Stack>
 		</AppContextProvider>
 	);
