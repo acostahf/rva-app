@@ -1,14 +1,14 @@
-import { useAppContext } from "@/context/AppContext";
 import React from "react";
 import { Text, View } from "react-native";
+import useAppStore from "@/store/appStore";
 
 const dashboard = () => {
-	const { stats } = useAppContext();
+	const { user } = useAppStore();
 
 	return (
 		<View>
 			<Text>dashboard</Text>
-			<Text>{stats.totalCost}</Text>
+			<Text>{user}</Text>
 		</View>
 	);
 };
