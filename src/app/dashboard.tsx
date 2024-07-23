@@ -9,8 +9,8 @@ const dashboard = () => {
 
 	return (
 		<View>
-			<Text>dashboard</Text>
-			<Text>{user}</Text>
+			<Text>Dashboard page</Text>
+			<Text>User: {user}</Text>
 		</View>
 	);
 };
