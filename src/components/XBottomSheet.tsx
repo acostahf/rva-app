@@ -1,47 +1,21 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import {
+	Pressable,
+	Text,
+	View,
+	NativeSyntheticEvent,
+	TextInputChangeEventData,
+} from "react-native";
 
 import BottomSheet, { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import XBottomSheetInput from "./XBottomSheetInput";
+import useCalStore from "@/store/calStore";
 
 const XBottomSheet = () => {
 	const snapPoints = useMemo(() => ["20%", "50%", "75%", "90%"], []);
-	const [profit, setProfit] = useState(0);
-	const [maxCost, setMaxCost] = useState(0);
-	const [shipping, setShipping] = useState(0);
-	const [quantity, setQuantity] = useState(1);
-	const [soldPrice, setSoldPrice] = useState(0);
-	const [marketplaceFee, setmarketplaceFee] = useState(0.13);
-	const [tax, setTax] = useState(0.0875);
-	const [promotedFees, setPromotedFees] = useState(0.03);
-	const [userRate, setUserRate] = useState(0.3);
-	const [coverShipping, setCoverShipping] = useState(false);
-
-	const calculateProfit = useCallback(() => {
-		let fees = 0;
-		fees = marketplaceFee + tax + promotedFees;
-		const finalPrice = soldPrice - (soldPrice * fees + shipping);
-		const totalCost = finalPrice * userRate;
-
-		setProfit(Math.round(finalPrice));
-		setMaxCost(Math.round(totalCost));
-	}, [soldPrice, marketplaceFee, tax, promotedFees, shipping, userRate]);
-
-	const handleSoldPriceChange = (
-		event: React.ChangeEvent<HTMLInputElement>
-	) => {
-		const value = parseInt(event.target.value);
-		setSoldPrice(value);
-	};
-
-	const handleUserRateChange = (value: number) => {
-		setUserRate(value);
-	};
-
-	useEffect(() => {
-		calculateProfit();
-	}, [
+	const {
 		soldPrice,
+		setSoldPrice,
 		marketplaceFee,
 		tax,
 		promotedFees,
@@ -51,8 +25,17 @@ const XBottomSheet = () => {
 		quantity,
 		profit,
 		maxCost,
-		calculateProfit,
-	]);
+		setProfit,
+		setMaxCost,
+		setUserRate,
+	} = useCalStore((state) => state);
+
+	const handleSoldPriceChange = (
+		event: NativeSyntheticEvent<TextInputChangeEventData>
+	) => {
+		const value = parseInt(event.nativeEvent.text);
+		setSoldPrice(value);
+	};
 
 	return (
 		<BottomSheet snapPoints={snapPoints}>
@@ -62,7 +45,12 @@ const XBottomSheet = () => {
 						Asking Price
 					</Text>
 
-					<XBottomSheetInput dou placeholder="$100" />
+					<XBottomSheetInput
+						dou
+						placeholder="$100"
+						onInputChange={handleSoldPriceChange}
+						val={soldPrice}
+					/>
 				</View>
 
 				<View className="flex flex-row gap-4">
