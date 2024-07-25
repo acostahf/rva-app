@@ -29,10 +29,13 @@ const XBottomSheetInput = ({
 	return (
 		<View className={dou ? "basis-5/12" : "grow"}>
 			<BottomSheetTextInput
-				keyboardType={type === "number-pad" ? "number-pad" : "default"}
+				// keyboardType={type === "number-pad" ? "number-pad" : "default"}
 				placeholder={placeholder}
 				onChange={onInputChange}
-				// value={val?.}
+				disableFullscreenUI={true}
+				value={val?.toString()}
+				inputMode="numeric"
+				returnKeyType="done"
 				textAlign="center"
 				className="px-6 py-4 border-solid border-2 border-black rounded-2xl"
 			/>

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import {
 	Pressable,
 	Text,
@@ -7,12 +7,13 @@ import {
 	TextInputChangeEventData,
 } from "react-native";
 
-import BottomSheet, { BottomSheetTextInput } from "@gorhom/bottom-sheet";
+import BottomSheet from "@gorhom/bottom-sheet";
 import XBottomSheetInput from "./XBottomSheetInput";
 import useCalStore from "@/store/calStore";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const XBottomSheet = () => {
-	const snapPoints = useMemo(() => ["20%", "50%", "75%", "90%"], []);
+	const snapPoints = useMemo(() => ["20%", "50%", "70%"], []);
 	const {
 		soldPrice,
 		setSoldPrice,
@@ -20,14 +21,8 @@ const XBottomSheet = () => {
 		tax,
 		promotedFees,
 		shipping,
-		userRate,
-		coverShipping,
-		quantity,
-		profit,
-		maxCost,
-		setProfit,
-		setMaxCost,
-		setUserRate,
+		buyPrice,
+		setBuyPrice,
 	} = useCalStore((state) => state);
 
 	const handleSoldPriceChange = (
@@ -37,19 +32,31 @@ const XBottomSheet = () => {
 		setSoldPrice(value);
 	};
 
-	return (
-		<BottomSheet snapPoints={snapPoints}>
-			<View className="p-4 w-full flex gap-4 justify-center items-center">
-				<View className="flex flex-row gap-4 items-center">
-					<Text className="text-xl basis-5/12 text-center">
-						Asking Price
-					</Text>
+	const handleBuyPriceChange = (
+		event: NativeSyntheticEvent<TextInputChangeEventData>
+	) => {
+		const val = parseInt(event.nativeEvent.text);
+		setBuyPrice(val);
+	};
 
+	const insert = useSafeAreaInsets();
+	return (
+		<BottomSheet topInset={insert.top} snapPoints={snapPoints}>
+			<View className="p-4 w-full flex gap-4 items-center overflow-hidden">
+				<View className="flex flex-row gap-4 items-center">
 					<XBottomSheetInput
 						dou
 						placeholder="$100"
+						label="Buy Price"
+						onInputChange={handleBuyPriceChange}
+						val={!buyPrice ? null : buyPrice}
+					/>
+					<XBottomSheetInput
+						dou
+						placeholder="$100"
+						label="Market Price"
 						onInputChange={handleSoldPriceChange}
-						val={soldPrice}
+						val={!soldPrice ? null : soldPrice}
 					/>
 				</View>
 
@@ -67,13 +74,14 @@ const XBottomSheet = () => {
 						<Text>Add New Item</Text>
 					</Pressable>
 				</View>
-				<View className="w-full px-6 pt-6">
-					<XBottomSheetInput label="Item Name" placeholder="Item 1" />
-				</View>
 
-				<View className="flex flex-row gap-4 justify-center w-full">
+				<View className="flex flex-row gap-4 justify-center w-full pt-6">
 					<XBottomSheetInput dou label="Market Value" placeholder="$100" />
 					<XBottomSheetInput dou label="QTY" placeholder="20" />
+				</View>
+
+				<View className="w-full px-6">
+					<XBottomSheetInput label="Item Name" placeholder="Item 1" />
 				</View>
 
 				<View className="w-full flex flex-row gap-4 px-6 content-start">
