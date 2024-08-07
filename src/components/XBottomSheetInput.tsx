@@ -15,7 +15,7 @@ interface XBottomSheetInputProps {
 	onInputChange?: (
 		e: NativeSyntheticEvent<TextInputChangeEventData>
 	) => void;
-	val?: number;
+	val?: any;
 }
 
 const XBottomSheetInput = ({

@@ -7,6 +7,8 @@ import { Pressable, Switch, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useDashStore from "@/store/dashStore";
+import Auth from "@/components/Auth";
+import { supabase } from "@/lib/supabase";
 
 export default function Page() {
 	const [revenue, setRevenue] = useState(0);
@@ -14,6 +16,7 @@ export default function Page() {
 	const [daily, setDaily] = useState(100);
 	const [weekly, setWeekly] = useState(100);
 	const [monthly, setMonthly] = useState(100);
+	const [user, setUser] = useState(null);
 	const {
 		cog,
 		pog,
@@ -42,6 +45,19 @@ export default function Page() {
 			setMonthly(Number((netSales / 3).toFixed(0)));
 		}
 	}, [toggle, grossSales, netSales]);
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const { data, error } = await supabase.auth.getUser();
+				setUser(data.user);
+			} catch (error) {
+				console.log(error);
+			}
+		};
+
+		fetchData();
+	}, []);
 
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>
@@ -83,7 +99,7 @@ export default function Page() {
 					<StatsCard dollar label="Value of Goods" value={vog} />
 				</View>
 				{/* LIST OF RECENT PICKUPS */}
-				<View></View>
+				<View>{!user && <Auth />}</View>
 			</View>
 
 			{/* MODAL FOR QUICK ADD */}
