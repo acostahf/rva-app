@@ -61,28 +61,28 @@ const XBottomSheet = () => {
 				</View>
 
 				<View className="flex flex-row gap-4">
-					<Pressable
+					{/* <Pressable
 						className="basis-5/12 px-6 py-4 border-solid border-2 border-black rounded-2xl"
 						onPress={() => {}}
 					>
 						<Text>Clear Feed</Text>
-					</Pressable>
-					<Pressable
+					</Pressable> */}
+					{/* <Pressable
 						className="basis-5/12 px-6 py-4 border-solid border-2 border-black rounded-2xl"
 						onPress={() => {}}
 					>
 						<Text>Add New Item</Text>
-					</Pressable>
+					</Pressable> */}
 				</View>
 
-				<View className="flex flex-row gap-4 justify-center w-full pt-6">
+				{/* <View className="flex flex-row gap-4 justify-center w-full pt-6">
 					<XBottomSheetInput dou label="Market Value" placeholder="$100" />
 					<XBottomSheetInput dou label="QTY" placeholder="20" />
-				</View>
+				</View> */}
 
-				<View className="w-full px-6">
+				{/* <View className="w-full px-6">
 					<XBottomSheetInput label="Item Name" placeholder="Item 1" />
-				</View>
+				</View> */}
 
 				<View className="w-full flex flex-row gap-4 px-6 content-start">
 					<Pressable

@@ -1,10 +1,18 @@
 import XBottomSheet from "@/components/XBottomSheet";
+import XFlatList from "@/components/XFlatList";
 import useCalStore from "@/store/calStore";
 import React, { useCallback, useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { Slider } from "react-native-awesome-slider";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSharedValue } from "react-native-reanimated";
+
+type ItemData = {
+	id: number;
+	title: string;
+	buyPrice: number;
+	marketPrice: number;
+};
 
 export default function Page() {
 	const {
@@ -29,6 +37,33 @@ export default function Page() {
 	const min = useSharedValue(0);
 	const max = useSharedValue(100);
 	const [roi, setRoi] = useState(0);
+
+	const bundle: ItemData[] = [
+		{
+			id: 123,
+			title: "Pikachu psa 10",
+			buyPrice: 100,
+			marketPrice: 200,
+		},
+		{
+			id: 124,
+			title: "Charizard psa 9",
+			buyPrice: 100,
+			marketPrice: 200,
+		},
+		{
+			id: 125,
+			title: "Another Card",
+			buyPrice: 100,
+			marketPrice: 200,
+		},
+		{
+			id: 126,
+			title: "Stack of raw cards",
+			buyPrice: 100,
+			marketPrice: 200,
+		},
+	];
 
 	const handleUserRateChange = (value: number) => {
 		setUserRate(value);
@@ -87,9 +122,11 @@ export default function Page() {
 					<Text className="text-4xl font-bold">
 						Total Profit: ${soldPrice ? profit : 0}
 					</Text>
-					<Text>Market Price: ${soldPrice}</Text>
-					<Text>ROI: {roi}x</Text>
-					<Text>Fees: {(marketplaceFee + tax + promotedFees) * 100}%</Text>
+					<Text className="text-2xl">Market Price: ${soldPrice}</Text>
+					<Text className="text-2xl">ROI: {roi}x</Text>
+					<Text className="text-2xl">
+						Fees: {(marketplaceFee + tax + promotedFees) * 100}%
+					</Text>
 				</View>
 				{/* slider here */}
 				<View className="w-full p-4 flex flex-col gap-4 justify-center items-center">
@@ -112,15 +149,14 @@ export default function Page() {
 						// }}
 					/>
 					<View className="flex flex-col gpa-2 items-center">
-						<Text>Max Buy Price </Text>
+						<Text className="text-2xl">Max Buy Price </Text>
 						<Text className="text-lg font-semibold">${maxCost} </Text>
 					</View>
 				</View>
 				{/* Flatlist here */}
-				<View>
-					<Text>Item 1</Text>
-					<Text>Item 2</Text>
-					<Text>Item 3</Text>
+				{/* <XFlatList bundle={bundle} /> */}
+				<View className="pt-10">
+					<Text className="text-2xl text-center">More Coming Soon...</Text>
 				</View>
 				<XBottomSheet />
 			</View>
