@@ -9,10 +9,21 @@ import { View } from "react-native";
 export default () => {
 	return (
 		<Tabs>
-			<Tabs.Screen
+			{/* <Tabs.Screen
 				name="dashboard"
 				options={{
 					headerShown: false,
+					tabBarIcon: ({ color }) => (
+						<MaterialIcons size={28} name="dashboard" color={color} />
+					),
+				}}
+			/> */}
+
+			<Tabs.Screen
+				name="index"
+				options={{
+					headerShown: false,
+					tabBarLabel: "Dashboard",
 					tabBarIcon: ({ color }) => (
 						<MaterialIcons size={28} name="dashboard" color={color} />
 					),
@@ -22,6 +33,7 @@ export default () => {
 			<Tabs.Screen
 				name="estimator"
 				options={{
+					tabBarLabel: "Estimator",
 					headerShown: false,
 					tabBarIcon: ({ color }) => (
 						<MaterialCommunityIcons
@@ -29,16 +41,6 @@ export default () => {
 							size={24}
 							color={color}
 						/>
-					),
-				}}
-			/>
-
-			<Tabs.Screen
-				name="index"
-				options={{
-					headerShown: false,
-					tabBarIcon: ({ color }) => (
-						<Entypo name="open-book" size={24} color={color} />
 					),
 				}}
 			/>

@@ -9,7 +9,7 @@ import {
 
 interface XBottomSheetInputProps {
 	label?: string;
-	placeholder: string;
+	placeholder?: string;
 	type?: "number-pad" | "default";
 	dou?: boolean;
 	onInputChange?: (
