@@ -46,3 +46,14 @@ export interface AppContextType {
 	isLoading: boolean;
 	user: any;
 }
+
+export interface SupabaseProduct {
+	created_at: string;
+	title: string;
+	buy_price: number;
+	market_value: number;
+	ebay_link: string;
+	qty: number;
+	user: string;
+	id: string;
+}

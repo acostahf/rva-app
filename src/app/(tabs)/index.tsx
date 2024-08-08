@@ -108,13 +108,17 @@ export default function Page() {
 				<FlatList
 					data={inventory}
 					renderItem={({ item }) => (
-						<Pressable className="flex flex-row justify-between mb-4 bg-cyan-900/40 p-8 rounded-xl">
-							<Text className="text-white text-xl font-bold">
-								{item.title}
-							</Text>
-							<Text className="text-white text-xl font-bold">
-								${item.market_value}
-							</Text>
+						<Pressable>
+							<Link href={`/details/${item.id}`}>
+								<View className="flex flex-row justify-between mb-4 bg-cyan-900/40 p-8 rounded-xl w-full">
+									<Text className="text-white text-xl font-bold">
+										{item.title}
+									</Text>
+									<Text className="text-white text-xl font-bold">
+										${item.market_value}
+									</Text>
+								</View>
+							</Link>
 						</Pressable>
 					)}
 				/>
