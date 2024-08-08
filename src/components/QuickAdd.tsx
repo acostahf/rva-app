@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
-import { Button, Pressable, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import {
 	BottomSheetModal,
 	BottomSheetView,
@@ -16,7 +16,7 @@ const QuickAdd = () => {
 	const [marketPrice, setMarketPrice] = useState("");
 	const [ebayLink, setEbayLink] = useState("");
 
-	const snapPoints = useMemo(() => ["10%", "50%"], []);
+	const snapPoints = useMemo(() => ["20%", "55%"], []);
 	// ref
 	const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
@@ -58,11 +58,10 @@ const QuickAdd = () => {
 
 	return (
 		<BottomSheetModalProvider>
-			<View className="absolute bottom-0 ">
-				<Button
+			<View className="absolute bottom-2 w-full px-4">
+				<XButton
 					onPress={handlePresentModalPress}
-					title="Quick Add"
-					color="black"
+					label="Quick Add"
 				/>
 				<BottomSheetModal
 					ref={bottomSheetModalRef}
@@ -109,9 +108,6 @@ const QuickAdd = () => {
 							}}
 						/>
 						<XButton label="Submit" onPress={handleSubmit} />
-						<Pressable>
-							<Text onPress={handleSubmit}>sub</Text>
-						</Pressable>
 					</BottomSheetView>
 				</BottomSheetModal>
 			</View>
