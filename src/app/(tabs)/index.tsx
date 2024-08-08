@@ -3,7 +3,7 @@ import StatsCard from "@/components/StatsCard";
 import XBottomSheet from "@/components/XBottomSheet";
 import { Link, Redirect } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { Pressable, Switch, Text, View } from "react-native";
+import { FlatList, Pressable, Switch, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useDashStore from "@/store/dashStore";
@@ -17,6 +17,7 @@ export default function Page() {
 	const [weekly, setWeekly] = useState(100);
 	const [monthly, setMonthly] = useState(100);
 	const [user, setUser] = useState(null);
+	const [inventory, setInventory] = useState([]);
 	const {
 		cog,
 		pog,
@@ -51,6 +52,11 @@ export default function Page() {
 			try {
 				const { data, error } = await supabase.auth.getUser();
 				setUser(data.user);
+
+				let { data: inventory } = await supabase
+					.from("inventory")
+					.select("*");
+				setInventory(inventory);
 			} catch (error) {
 				console.log(error);
 			}
@@ -99,6 +105,20 @@ export default function Page() {
 					<StatsCard dollar label="Value of Goods" value={vog} />
 				</View>
 				{/* LIST OF RECENT PICKUPS */}
+				<FlatList
+					data={inventory}
+					renderItem={({ item }) => (
+						<Pressable className="flex flex-row justify-between mb-4 bg-cyan-900/40 p-8 rounded-xl">
+							<Text className="text-white text-xl font-bold">
+								{item.title}
+							</Text>
+							<Text className="text-white text-xl font-bold">
+								${item.market_value}
+							</Text>
+						</Pressable>
+					)}
+				/>
+
 				<View>{!user && <Auth />}</View>
 			</View>
 
