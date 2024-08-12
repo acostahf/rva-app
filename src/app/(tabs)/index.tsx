@@ -79,6 +79,7 @@ export default function Page() {
 						>
 							<Text>{toggle ? "Total" : "Profit"}</Text>
 						</Pressable>
+						<Link href="/account"> Account </Link>
 					</View>
 					<Text className="text-5xl font-bold">${revenue}</Text>
 				</View>
