@@ -9,6 +9,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useDashStore from "@/store/dashStore";
 import Auth from "@/components/Auth";
 import { supabase } from "@/lib/supabase";
+import AccountButton  from "@/components/AccountButton";
 
 export default function Page() {
 	const [revenue, setRevenue] = useState(0);
@@ -79,7 +80,7 @@ export default function Page() {
 						>
 							<Text>{toggle ? "Total" : "Profit"}</Text>
 						</Pressable>
-						<Link href="/account"> Account </Link>
+						<AccountButton />
 					</View>
 					<Text className="text-5xl font-bold">${revenue}</Text>
 				</View>
