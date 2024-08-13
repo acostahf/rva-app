@@ -9,6 +9,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useDashStore from "@/store/dashStore";
 import Auth from "@/components/Auth";
 import { supabase } from "@/lib/supabase";
+import Chart from "@/components/Chart";
 
 export default function Page() {
 	const [revenue, setRevenue] = useState(0);
@@ -84,6 +85,9 @@ export default function Page() {
 					</View>
 					<Text className="text-5xl font-bold">${revenue}</Text>
 				</View>
+
+				<Chart />
+
 				<View className="flex flex-row gap-6">
 					<View className="flex flex-row items-center gap-2">
 						<Text className="font-bold">${daily}</Text>
