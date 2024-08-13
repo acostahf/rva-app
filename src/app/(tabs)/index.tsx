@@ -10,6 +10,7 @@ import useDashStore from "@/store/dashStore";
 import Auth from "@/components/Auth";
 import { supabase } from "@/lib/supabase";
 import AccountButton  from "@/components/AccountButton";
+import Chart from "@/components/Chart";
 
 export default function Page() {
 	const [revenue, setRevenue] = useState(0);
@@ -78,47 +79,55 @@ export default function Page() {
 							className="text-gray-500"
 							onPress={() => setToggle(!toggle)}
 						>
-							<Text>{toggle ? "Total" : "Profit"}</Text>
+							<View className="border-indigo-500 border-2 border-solid rounded-full px-2 ">
+								<Text>{toggle ? "Profit" : "Total"}</Text>
+							</View>
 						</Pressable>
 						<AccountButton />
 					</View>
 					<Text className="text-5xl font-bold">${revenue}</Text>
 				</View>
-				<View className="flex flex-row gap-4">
-					<View>
-						<Text className="text-md font-bold">Daily</Text>
-						<Text className="text-xl font-bold">${daily}</Text>
+
+				<Chart />
+
+				<View className="flex flex-row gap-6">
+					<View className="flex flex-row items-center gap-2">
+						<Text className="font-bold">${daily}</Text>
+						<Text className="text-sm">Daily</Text>
 					</View>
-					<View>
-						<Text className="text-md font-bold">Weekly</Text>
-						<Text className="text-xl font-bold">${weekly}</Text>
+					<View className="flex flex-row items-center gap-2">
+						<Text className="font-bold">${weekly}</Text>
+						<Text className="text-sm">Weekly</Text>
 					</View>
-					<View>
-						<Text className="text-md font-bold">Monthly</Text>
-						<Text className="text-xl font-bold">${monthly}</Text>
+					<View className="flex flex-row items-center gap-2">
+						<Text className="font-bold">${monthly}</Text>
+						<Text className="text-sm">Monthly</Text>
 					</View>
 				</View>
 
 				{/* STATS */}
-				<View className="flex flex-row ">
+				{/* <View className="flex flex-row">
 					<StatsCard dollar label="Cost of Goods" value={cog} />
 					<StatsCard dollar label="Profit of Goods" value={pog} />
 					<StatsCard label="Number of Items" value={qty} />
 					<StatsCard dollar label="Value of Goods" value={vog} />
-				</View>
+				</View> */}
 				{/* LIST OF RECENT PICKUPS */}
 				<FlatList
+					style={{ paddingTop: 20 }}
 					data={inventory}
 					renderItem={({ item }) => (
 						<Pressable>
 							<Link href={`/details/${item.id}`}>
-								<View className="flex flex-row justify-between mb-4 bg-cyan-900/40 p-8 rounded-xl w-full">
-									<Text className="text-white text-xl font-bold">
+								<View className="flex flex-row justify-between mb-4 rounded-xl w-full">
+									<Text className="text-black text-2xl font-bold capitalize">
 										{item.title}
 									</Text>
-									<Text className="text-white text-xl font-bold">
-										${item.market_value}
-									</Text>
+									<View className="rounded-3xl px-4 py-2 bg-indigo-500 min-w-24">
+										<Text className="text-white text-lg font-bold text-center">
+											${item.market_value}
+										</Text>
+									</View>
 								</View>
 							</Link>
 						</Pressable>
