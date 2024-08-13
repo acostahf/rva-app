@@ -9,11 +9,11 @@ interface StatsCardProps {
 
 const StatsCard = ({ value, label, dollar }: StatsCardProps) => {
 	return (
-		<View className="flex flex-col items-center flex-1">
+		<View className="flex flex-col items-start flex-1 ">
 			<Text className="text-xl font-bold">
 				{dollar ? `$${value}` : value}
 			</Text>
-			<Text className="text-sm">{label}</Text>
+			<Text className="text-xs max-w-12">{label}</Text>
 		</View>
 	);
 };
