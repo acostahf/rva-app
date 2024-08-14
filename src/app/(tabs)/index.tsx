@@ -1,7 +1,7 @@
 import QuickAdd from "@/components/QuickAdd";
 import StatsCard from "@/components/StatsCard";
 import XBottomSheet from "@/components/XBottomSheet";
-import { Link, Redirect } from "expo-router";
+import { Link, Redirect, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { FlatList, Pressable, Switch, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -33,7 +33,7 @@ export default function Page() {
 		netSales,
 		setNetSales,
 	} = useDashStore();
-
+	const router = useRouter();
 	useEffect(() => {
 		if (toggle) {
 			setRevenue(grossSales);
@@ -53,6 +53,9 @@ export default function Page() {
 			try {
 				const { data, error } = await supabase.auth.getUser();
 				setUser(data.user);
+				if (!data.user) {
+					router.push("/signin");
+				}
 
 				let { data: inventory } = await supabase
 					.from("inventory")
@@ -131,8 +134,6 @@ export default function Page() {
 						</Pressable>
 					)}
 				/>
-
-				<View>{!user && <Auth />}</View>
 			</View>
 
 			{/* MODAL FOR QUICK ADD */}

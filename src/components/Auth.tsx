@@ -6,8 +6,11 @@ import {
 	AppState,
 	TextInput,
 	Button,
+	Text,
 } from "react-native";
 import { supabase } from "@/lib/supabase";
+import XButton from "./XButton";
+import { useRouter } from "expo-router";
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -25,13 +28,18 @@ export default function Auth() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [loading, setLoading] = useState(false);
+	const router = useRouter();
 
 	async function signInWithEmail() {
 		setLoading(true);
-		const { error } = await supabase.auth.signInWithPassword({
+		const { data, error } = await supabase.auth.signInWithPassword({
 			email: email,
 			password: password,
 		});
+
+		if (data) {
+			router.replace("/");
+		}
 
 		if (error) Alert.alert(error.message);
 		setLoading(false);
@@ -54,9 +62,13 @@ export default function Auth() {
 	}
 
 	return (
-		<View style={styles.container}>
-			<View style={[styles.verticallySpaced, styles.mt20]}>
+		<View className="p-6 flex flex-col gap-4">
+			<View>
+				<Text className="text-2xl">SIGN IN</Text>
+			</View>
+			<View>
 				<TextInput
+					className="border-solid border-2 border-black rounded-lg p-2"
 					// label="Email"
 					// leftIcon={{ type: "font-awesome", name: "envelope" }}
 					onChangeText={(text) => setEmail(text)}
@@ -65,8 +77,9 @@ export default function Auth() {
 					autoCapitalize={"none"}
 				/>
 			</View>
-			<View style={styles.verticallySpaced}>
+			<View>
 				<TextInput
+					className="border-solid border-2 border-black rounded-lg p-2"
 					// label="Password"
 					// leftIcon={{ type: "font-awesome", name: "lock" }}
 					onChangeText={(text) => setPassword(text)}
@@ -76,19 +89,9 @@ export default function Auth() {
 					autoCapitalize={"none"}
 				/>
 			</View>
-			<View style={[styles.verticallySpaced, styles.mt20]}>
-				<Button
-					title="Sign in"
-					disabled={loading}
-					onPress={() => signInWithEmail()}
-				/>
-			</View>
-			<View style={styles.verticallySpaced}>
-				<Button
-					title="Sign up"
-					disabled={loading}
-					onPress={() => signUpWithEmail()}
-				/>
+			<View className="flex flex-col gap-4 mt-4">
+				<XButton label="Sign in" onPress={() => signInWithEmail()} />
+				<XButton label="Sign up" onPress={() => signUpWithEmail()} />
 			</View>
 		</View>
 	);
