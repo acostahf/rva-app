@@ -37,7 +37,7 @@ export default function Auth() {
 			password: password,
 		});
 
-		session && router.replace("/");
+		data.user && router.replace("/");
 
 		if (error) Alert.alert(error.message);
 		setLoading(false);
