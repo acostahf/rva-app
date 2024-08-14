@@ -54,7 +54,7 @@ export default function Page() {
 				const { data, error } = await supabase.auth.getUser();
 				setUser(data.user);
 				if (!data.user) {
-					router.push("/signin");
+					router.replace("/signin");
 				}
 
 				let { data: inventory } = await supabase
