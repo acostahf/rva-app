@@ -37,9 +37,7 @@ export default function Auth() {
 			password: password,
 		});
 
-		if (data) {
-			router.replace("/");
-		}
+		session && router.replace("/");
 
 		if (error) Alert.alert(error.message);
 		setLoading(false);
@@ -54,6 +52,8 @@ export default function Auth() {
 			email: email,
 			password: password,
 		});
+
+		session && router.replace("/");
 
 		if (error) Alert.alert(error.message);
 		if (!session)
