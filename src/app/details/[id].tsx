@@ -2,20 +2,28 @@ import { supabase } from "@/lib/supabase";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Text, View } from "react-native";
-import { SupabaseProduct } from "@/types/index";
+import { SupabaseBundle, SupabaseProduct } from "@/types/index";
+import InventoryList from "@/components/InventoryList";
 
 const DetailsPage = () => {
 	const { id } = useLocalSearchParams();
-	const [product, setProduct] = useState<SupabaseProduct | null>(null);
+	const [inventory, setInventory] = useState([]);
+	const [bundle, setBundle] = useState<SupabaseBundle | null>(null);
 
 	const fetchData = async () => {
 		try {
-			const { data, error } = await supabase
-				.from("inventory")
+			const { data: bundle, error } = await supabase
+				.from("bundles")
 				.select("*")
 				.eq("id", id);
-			setProduct(data[0]);
-			console.log(data);
+			setBundle(bundle[0]);
+
+			const { data: inventory, error: inventoryErr } = await supabase
+				.from("inventory")
+				.select("*")
+				.eq("bundle_id", bundle[0].id);
+
+			setInventory(inventory);
 		} catch (error) {
 			console.log(error);
 		}
@@ -27,22 +35,23 @@ const DetailsPage = () => {
 
 	return (
 		<View>
-			{product && (
+			{bundle && (
 				<View className={`flex flex-col gap-4 p-4`}>
 					<Text className="text-3xl font-bold capitalize">
-						{product.title}
+						{bundle.title}
 					</Text>
 					<Text className="text-2xl font-bold">
-						Profit: ${product.market_value - product.buy_price}
+						Profit: ${bundle.market_value - bundle.buy_price}
 					</Text>
-					<Text className="text-xl">Buy Price: ${product.buy_price}</Text>
+					<Text className="text-xl">Buy Price: ${bundle.buy_price}</Text>
 					<Text className="text-xl">
-						Market value: ${product.market_value}
+						Market value: ${bundle.market_value}
 					</Text>
-					<Text className="text-xl">Number of Items: {product.qty}</Text>
+					<Text className="text-xl">Number of Items: {bundle.qty}</Text>
 					<Text className="text-xl">
-						Pickup Date: {product.created_at}
+						Pickup Date: {new Date(bundle.created_at).toDateString()}
 					</Text>
+					<InventoryList inventory data={inventory} />
 				</View>
 			)}
 		</View>

@@ -1,15 +1,13 @@
 import QuickAdd from "@/components/QuickAdd";
-import StatsCard from "@/components/StatsCard";
-import XBottomSheet from "@/components/XBottomSheet";
-import { Link, Redirect, useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { FlatList, Pressable, Switch, Text, View } from "react-native";
+import { FlatList, Pressable, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useDashStore from "@/store/dashStore";
-import Auth from "@/components/Auth";
 import { supabase } from "@/lib/supabase";
 import Chart from "@/components/Chart";
+import InventoryList from "@/components/InventoryList";
+import useAppStore from "@/store/appStore";
 
 export default function Page() {
 	const [revenue, setRevenue] = useState(0);
@@ -18,7 +16,8 @@ export default function Page() {
 	const [weekly, setWeekly] = useState(100);
 	const [monthly, setMonthly] = useState(100);
 	const [user, setUser] = useState(null);
-	const [inventory, setInventory] = useState([]);
+	const [bundles, setBundles] = useState([]);
+	const { setUser_id } = useAppStore();
 	const {
 		cog,
 		pog,
@@ -53,19 +52,19 @@ export default function Page() {
 			try {
 				const { data, error } = await supabase.auth.getUser();
 				setUser(data.user);
+				setUser_id(data.user.id);
 				if (!data.user) {
 					router.replace("/signin");
 				}
 
-				let { data: inventory } = await supabase
-					.from("inventory")
+				const { data: bundles } = await supabase
+					.from("bundles")
 					.select("*");
-				setInventory(inventory);
+				setBundles(bundles);
 			} catch (error) {
 				console.log(error);
 			}
 		};
-
 		fetchData();
 	}, []);
 
@@ -114,26 +113,7 @@ export default function Page() {
 					<StatsCard dollar label="Value of Goods" value={vog} />
 				</View> */}
 				{/* LIST OF RECENT PICKUPS */}
-				<FlatList
-					style={{ paddingTop: 20 }}
-					data={inventory}
-					renderItem={({ item }) => (
-						<Pressable>
-							<Link href={`/details/${item.id}`}>
-								<View className="flex flex-row justify-between mb-4 rounded-xl w-full">
-									<Text className="text-black text-2xl font-bold capitalize">
-										{item.title}
-									</Text>
-									<View className="rounded-3xl px-4 py-2 bg-indigo-500 min-w-24">
-										<Text className="text-white text-lg font-bold text-center">
-											${item.market_value}
-										</Text>
-									</View>
-								</View>
-							</Link>
-						</Pressable>
-					)}
-				/>
+				<InventoryList data={bundles} />
 			</View>
 
 			{/* MODAL FOR QUICK ADD */}

@@ -1,5 +1,11 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import React, {
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+} from "react";
+import { View } from "react-native";
 import {
 	BottomSheetModal,
 	BottomSheetView,
@@ -8,13 +14,33 @@ import {
 import XBottomSheetInput from "./XBottomSheetInput";
 import XButton from "./XButton";
 import { supabase } from "@/lib/supabase";
+import useAppStore from "@/store/appStore";
+import { SupabaseProduct } from "@/types/index";
 
-const QuickAdd = () => {
+interface QuickAddProps {
+	edit?: boolean;
+	pageId?: any;
+	data?: any | null;
+	handleEdit?: ({
+		title,
+		buyPrice,
+		marketPrice,
+		ebayLink,
+	}: {
+		title: string;
+		buyPrice: string;
+		marketPrice: string;
+		ebayLink: string;
+	}) => void;
+}
+
+const QuickAdd = ({ edit, pageId, data, handleEdit }: QuickAddProps) => {
 	const [title, setTitle] = useState("");
 	const [qty, setQty] = useState("");
 	const [buyPrice, setBuyPrice] = useState("");
 	const [marketPrice, setMarketPrice] = useState("");
 	const [ebayLink, setEbayLink] = useState("");
+	const { user_id } = useAppStore();
 
 	const snapPoints = useMemo(() => ["20%", "55%"], []);
 	// ref
@@ -27,23 +53,58 @@ const QuickAdd = () => {
 	const handleSheetChanges = useCallback((index: number) => {
 		console.log("handleSheetChanges", index);
 	}, []);
+	useEffect(() => {
+		if (data) {
+			setTitle(data.title);
+			setQty(data.qty);
+			setBuyPrice(data.buy_price);
+			setMarketPrice(data.market_value);
+			setEbayLink(data.ebay_link);
+		}
+	}, [data]);
 
 	const handleSubmit = useCallback(async () => {
 		try {
-			const user = await supabase.auth.getUser();
-			const { data, error } = await supabase
-				.from("inventory")
-				.insert([
-					{
-						title: title,
-						buy_price: Number(buyPrice),
-						qty: Number(qty),
-						market_value: Number(marketPrice),
+			if (!edit) {
+				const { data: bundle, error } = await supabase
+					.from("bundles")
+					.insert([
+						{
+							title: title,
+							buy_price: Number(buyPrice),
+							qty: Number(qty),
+							market_value: Number(marketPrice),
+							ebay_link: ebayLink,
+							user_id: user_id,
+						},
+					])
+					.select();
+				let bundlesArry = [];
+				//take the qty and create that many inventory items
+				for (let i = 0; i < Number(qty); i++) {
+					bundlesArry.push({ title: `${title} - ${i + 1}` });
+				}
+				//insert that many inventory items
+				await supabase.from("inventory").insert(
+					bundlesArry.map((item, i) => ({
+						...item,
+						buy_price: Number(buyPrice) / Number(qty),
+						market_value: Number(marketPrice) / Number(qty),
 						ebay_link: ebayLink,
-						user: user.data.user.id,
-					},
-				])
-				.select();
+						user: user_id,
+						bundle_id: bundle[0].id,
+					}))
+				);
+			} else {
+				//edit
+
+				handleEdit({
+					title: title,
+					buyPrice: buyPrice,
+					marketPrice: marketPrice,
+					ebayLink: ebayLink,
+				});
+			}
 			//clear state
 			bottomSheetModalRef.current?.close();
 			setTitle("");
@@ -58,11 +119,12 @@ const QuickAdd = () => {
 
 	return (
 		<BottomSheetModalProvider>
-			<View className="absolute bottom-2 w-full px-4">
-				<XButton
-					onPress={handlePresentModalPress}
-					label="Quick Add"
-				/>
+			<View
+				className={`absolute ${
+					!edit ? "bottom-2" : "bottom-6"
+				} w-full px-4`}
+			>
+				<XButton onPress={handlePresentModalPress} label="Quick Add" />
 				<BottomSheetModal
 					ref={bottomSheetModalRef}
 					index={1}
@@ -77,13 +139,15 @@ const QuickAdd = () => {
 								setTitle(e.nativeEvent.text);
 							}}
 						/>
-						<XBottomSheetInput
-							label="Qty"
-							val={qty}
-							onInputChange={(e) => {
-								setQty(e.nativeEvent.text);
-							}}
-						/>
+						{!edit && (
+							<XBottomSheetInput
+								label="Qty"
+								val={qty}
+								onInputChange={(e) => {
+									setQty(e.nativeEvent.text);
+								}}
+							/>
+						)}
 						<View className="flex flex-row gap-4 justify-center w-full">
 							<XBottomSheetInput
 								label="Buy Price"

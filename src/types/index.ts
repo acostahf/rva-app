@@ -57,3 +57,16 @@ export interface SupabaseProduct {
 	user: string;
 	id: string;
 }
+
+export interface SupabaseBundle {
+	id: number;
+	created_at: Date;
+	title: string;
+	buy_price: number;
+	market_value: number;
+	qty: number;
+	receipt: string;
+	ebay_link: string;
+	user: number;
+	// geo_location: string;
+}
