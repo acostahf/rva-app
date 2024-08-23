@@ -8,6 +8,7 @@ import { supabase } from "@/lib/supabase";
 import Chart from "@/components/Chart";
 import InventoryList from "@/components/InventoryList";
 import useAppStore from "@/store/appStore";
+import HeatMap from "@/components/HeatMap";
 
 export default function Page() {
 	const [revenue, setRevenue] = useState(0);
@@ -88,7 +89,8 @@ export default function Page() {
 					<Text className="text-5xl font-bold">${revenue}</Text>
 				</View>
 
-				<Chart />
+				{/* <Chart /> */}
+				<HeatMap />
 
 				<View className="flex flex-row gap-6">
 					<View className="flex flex-row items-center gap-2">
