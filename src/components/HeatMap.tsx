@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Dimensions, Text, View } from "react-native";
+import React from "react";
+import { Dimensions, View } from "react-native";
 import { ContributionGraph } from "react-native-chart-kit";
-
-import { supabase } from "@/lib/supabase";
+import { useActivity } from "@/app/api/stats";
 
 //This component is a heatmap or contribution graph that shows the user's activity on a daily basis.
 //If the user list their daily goal for the day, the heatmap will show a filled square, if they list less than their goal then the color will be lighter.
@@ -10,7 +9,7 @@ import { supabase } from "@/lib/supabase";
 //This component is to be reusable for any of the users habits or goals.
 
 const HeatMap = () => {
-	const [activity, setActivity] = useState([]);
+	const { data } = useActivity();
 	const chartConfig = {
 		backgroundGradientFrom: "#1E2923",
 		backgroundGradientTo: "#08130D",
@@ -22,24 +21,6 @@ const HeatMap = () => {
 		useShadowColorFromDataset: false, // optional
 	};
 
-	const getData = async () => {
-		//First I need to get the users id from the session
-		const data = await supabase.auth.getUser();
-		const user = data.data.user.id;
-
-		//Then I need to get the users activity from the activity table
-		const activity = await supabase
-			.from("activity")
-			.select("*")
-			.eq("user_id", user);
-		console.log("Your activity", activity.data);
-		setActivity(activity.data);
-	};
-
-	useEffect(() => {
-		getData();
-	}, []);
-
 	return (
 		<View className="">
 			<ContributionGraph
@@ -50,7 +31,7 @@ const HeatMap = () => {
 					marginTop: -15,
 				}}
 				yAxisLabel="day"
-				values={activity}
+				values={data ? data : []}
 				endDate={new Date()}
 				numDays={105}
 				width={Dimensions.get("window").width}
