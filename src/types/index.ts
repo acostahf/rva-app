@@ -5,15 +5,14 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
 };
 
 export interface Bundle {
-	id: string;
+	created_at?: Date;
 	title: string;
-	cost: number;
-	value: number;
-	geoLocation: string;
-	quantity: number;
-	receipt: string;
-	ebayLink: string;
-	createdAt: Date;
+	buy_price: number;
+	market_value: number;
+	ebay_link: string;
+	qty: number;
+	user_id?: string;
+	id?: string;
 }
 
 export type Bundles = Bundle[];

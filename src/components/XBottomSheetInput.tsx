@@ -10,7 +10,7 @@ import {
 interface XBottomSheetInputProps {
 	label?: string;
 	placeholder?: string;
-	type?: "number-pad" | "default";
+	type: "numeric" | "text";
 	dou?: boolean;
 	onInputChange?: (
 		e: NativeSyntheticEvent<TextInputChangeEventData>
@@ -34,7 +34,7 @@ const XBottomSheetInput = ({
 				onChange={onInputChange}
 				disableFullscreenUI={true}
 				value={val?.toString()}
-				inputMode="numeric"
+				inputMode={type}
 				returnKeyType="done"
 				textAlign="center"
 				className="px-6 py-4 border-solid border-2 border-black rounded-2xl"
