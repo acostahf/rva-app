@@ -1,16 +1,38 @@
 import QuickAdd from "@/components/QuickAdd";
-import React, { useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+	ActivityIndicator,
+	Alert,
+	Pressable,
+	Text,
+	View,
+} from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import InventoryList from "@/components/InventoryList";
 import HeatMap from "@/components/HeatMap";
 import { useStats } from "../api/stats";
+import { supabase } from "@/lib/supabase";
+import { Redirect, router } from "expo-router";
 import { useBundles } from "../api/bundles";
+import { useAuth } from "@/providers/AuthProvider";
 
 export default function Page() {
-	const { data } = useStats();
-	const { data: bundles } = useBundles();
+	const { data, error, isError, isPending } = useStats();
 	const [toggle, setToggle] = useState(true);
+	const { data: bundles } = useBundles();
+	const { session, loading } = useAuth();
+
+	if (loading) {
+		return <ActivityIndicator />;
+	}
+
+	if (!session) {
+		return <Redirect href={"/signin"} />;
+	}
+
+	if (isError) {
+		Alert.alert("stats error", error.message);
+	}
 
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>
@@ -29,9 +51,13 @@ export default function Page() {
 							</View>
 						</Pressable>
 					</View>
-					<Text className="text-5xl font-bold">
-						${data?.gross.toFixed(0)}
-					</Text>
+					{isPending ? (
+						<Text className="text-5xl font-bold">Loading...</Text>
+					) : (
+						<Text className="text-5xl font-bold">
+							${data?.gross.toFixed(0)}
+						</Text>
+					)}
 				</View>
 
 				{/* <Chart /> */}
