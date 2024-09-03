@@ -26,7 +26,7 @@ export const useStats = () => {
 			const { data: invData, error: invErr } = await supabase
 				.from("inventory")
 				.select("*")
-				.eq("user", user)
+				.eq("user_id", user)
 				.gt("created_at", beginningDate);
 
 			invData.forEach((item) => {
